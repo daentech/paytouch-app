@@ -1,4 +1,4 @@
-package uk.dan_gilbert.paytouch.ui;
+package uk.dan_gilbert.paytouch.data.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;

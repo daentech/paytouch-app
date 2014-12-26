@@ -1,18 +1,28 @@
 package uk.dan_gilbert.paytouch.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.ActorController;
+import uk.dan_gilbert.paytouch.data.adapter.FilmAdapter;
 import uk.dan_gilbert.paytouch.data.model.Actor;
+import uk.dan_gilbert.paytouch.ui.transformation.CircleTransform;
 
 /**
  * A fragment representing a single Actor detail screen.
@@ -20,9 +30,11 @@ import uk.dan_gilbert.paytouch.data.model.Actor;
  * in two-pane mode (on tablets) or a {@link uk.dan_gilbert.paytouch.ui.activity.ActorDetailActivity}
  * on handsets.
  */
-public class ActorDetailFragment extends Fragment {
+public class ActorDetailFragment extends ListFragment {
 
     @Inject ActorController actorController;
+
+    @InjectView(android.R.id.list) ListView listView;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -30,9 +42,6 @@ public class ActorDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
     private Actor actor;
 
     /**
@@ -57,15 +66,61 @@ public class ActorDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_actor_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (actor != null) {
-            ((TextView) rootView.findViewById(R.id.actor_detail)).setText(actor.name);
-        }
+        ButterKnife.inject(this, rootView);
+
+        // Setup the header view
+        listView.addHeaderView(initHeaderView(inflater));
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setListAdapter(new FilmAdapter(actor.knownFor));
+    }
+
+    private View initHeaderView(LayoutInflater inflater) {
+        View view = inflater.inflate(R.layout.actor_detail_header, listView, false);
+
+        HeaderViewHolder holder = new HeaderViewHolder(view);
+        view.setTag(holder);
+
+        holder.bindView(actor);
+
+        return view;
+    }
+
+    static class HeaderViewHolder {
+
+        Context ctx;
+
+        @InjectView(R.id.actor_name)
+        TextView actorName;
+        @InjectView(R.id.actor_location) TextView actorLocation;
+        @InjectView(R.id.actor_description) TextView actorDescription;
+        @InjectView(R.id.actor_profile_image)
+        ImageView actorProfileImage;
+
+
+        public HeaderViewHolder(View v) {
+            ButterKnife.inject(this, v);
+            ctx = v.getContext();
+        }
+
+        public void bindView(Actor actor) {
+            actorName.setText(Html.fromHtml(actor.displayName()));
+            actorLocation.setText(actor.location);
+            actorDescription.setText(actor.description);
+
+            Picasso.with(ctx).load(actor.profilePath)
+                    .placeholder(R.drawable.profile_placeholder)
+                    .transform(new CircleTransform())
+                    .into(actorProfileImage);
+        }
     }
 }

@@ -5,5 +5,7 @@
     <string name="title_actor_detail">Actor Detail</string>
     <string name="paytouch_logo">PayTouch</string>
     <string name="back_button">back button</string>
+    <string name="filmography">Filmography</string>
+    <string name="film_poster">film poster</string>
 
 </resources>

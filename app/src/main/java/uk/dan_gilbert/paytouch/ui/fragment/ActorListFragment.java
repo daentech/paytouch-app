@@ -21,7 +21,7 @@ import timber.log.Timber;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.ActorController;
-import uk.dan_gilbert.paytouch.ui.ActorListAdapter;
+import uk.dan_gilbert.paytouch.data.adapter.ActorListAdapter;
 
 /**
  * A list fragment representing a list of Actors. This fragment

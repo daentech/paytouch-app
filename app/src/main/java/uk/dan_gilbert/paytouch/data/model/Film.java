@@ -8,7 +8,7 @@ public class Film {
     public String backdropPath;
     public long id;
     public String originalTitle;
-    public String releaseDate;
+    public long releaseDate;
     public String posterPath;
     public float popularity;
     public String title;
