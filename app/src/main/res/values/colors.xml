@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_background_color">#454954</color>
+    <color name="white">#FFFFFF</color>
+    <color name="list_background">#787880</color>
+    <color name="light_background_color">#ffffff</color>
+    <color name="dark_item_text_color">#FFFFFF</color>
+    <color name="light_item_text_color">#484c57</color>
+    <color name="toolbar_background">#010101</color>
+</resources>
