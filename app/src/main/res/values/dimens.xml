@@ -2,5 +2,5 @@
 <resources>
     <dimen name="list_item_border_radius">5dp</dimen>
     <dimen name="pin_width">10dp</dimen>
-    <dimen name="outline_width">3dp</dimen>
+    <dimen name="outline_width">2dp</dimen>
 </resources>

@@ -14,12 +14,15 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.InjectViews;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.model.Actor;
+import uk.dan_gilbert.paytouch.ui.TypographyFacade;
 import uk.dan_gilbert.paytouch.ui.transformation.CircleTransform;
 
 /**
@@ -95,6 +98,8 @@ public class ActorListAdapter extends BaseAdapter {
         @InjectView(R.id.actor_profile_image) ImageView actorProfileImage;
         @InjectView(R.id.actor_popularity) TextView actorPopularity;
 
+        @InjectViews( { R.id.actor_name, R.id.actor_location, R.id.actor_description, R.id.actor_popularity } ) List<TextView> textViewList;
+
 
         public ViewHolder(View v) {
             ButterKnife.inject(this, v);
@@ -102,6 +107,8 @@ public class ActorListAdapter extends BaseAdapter {
             ctx = v.getContext();
 
             pinWidth = res.getDimensionPixelSize(R.dimen.pin_width);
+
+            ButterKnife.apply(textViewList, TypographyFacade.typographyAction);
         }
 
         public void bindView(Actor actor, int position) {

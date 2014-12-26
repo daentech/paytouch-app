@@ -17,15 +17,19 @@ import android.widget.TextView;
 
 import com.edmodo.rangebar.RangeBar;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.InjectViews;
 import butterknife.OnClick;
 import timber.log.Timber;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.Filter;
+import uk.dan_gilbert.paytouch.ui.TypographyFacade;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment;
 
@@ -70,6 +74,23 @@ public class ActorListActivity extends ActionBarActivity
 
     @InjectView(R.id.search_title) TextView searchTitle;
 
+    @InjectViews( {
+            R.id.order_by_name,
+            R.id.order_by_popularity,
+            R.id.search_title,
+            R.id.search_button,
+            R.id.name_search,
+            R.id.location_search,
+            R.id.name_title,
+            R.id.location_title,
+            R.id.is_top_title,
+            R.id.radio_yes_button,
+            R.id.radio_no_button,
+            R.id.popularity_title,
+            R.id.rangeBarHigh,
+            R.id.rangeBarLow,
+    } )List<TextView> textViewList;
+
     @Inject Filter filter;
 
     /**
@@ -86,6 +107,7 @@ public class ActorListActivity extends ActionBarActivity
         PayTouchApp.get(this).inject(this);
 
         ButterKnife.inject(this);
+        ButterKnife.apply(textViewList, TypographyFacade.typographyAction);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

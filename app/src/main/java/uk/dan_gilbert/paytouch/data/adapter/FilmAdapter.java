@@ -12,12 +12,15 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.InjectViews;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.model.Film;
+import uk.dan_gilbert.paytouch.ui.TypographyFacade;
 
 /**
  * Created by dangilbert on 26/12/14.
@@ -74,9 +77,12 @@ public class FilmAdapter extends BaseAdapter {
         @InjectView(R.id.ratings_count) TextView ratingCount;
         @InjectView(R.id.imageview_film_poster) ImageView poster;
 
+        @InjectViews( { R.id.film_title, R.id.film_date, R.id.average_rating, R.id.ratings_count} ) List<TextView> textViewList;
+
         public ViewHolder(View v) {
             ButterKnife.inject(this, v);
             this.ctx = v.getContext();
+            ButterKnife.apply(textViewList, TypographyFacade.typographyAction);
         }
 
         public void bindView(Film film) {
