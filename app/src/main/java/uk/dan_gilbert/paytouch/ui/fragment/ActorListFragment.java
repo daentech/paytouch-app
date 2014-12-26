@@ -268,7 +268,6 @@ public class ActorListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        Timber.d("Opening item: " + id);
         mCallbacks.onItemSelected((int)id);
     }
 
