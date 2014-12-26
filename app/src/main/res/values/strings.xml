@@ -19,5 +19,7 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="popularity_title">popularity</string>
+    <string name="no_actors_found">No actors found matching that criteria</string>
+    <string name="enter_location">write location</string>
 
 </resources>

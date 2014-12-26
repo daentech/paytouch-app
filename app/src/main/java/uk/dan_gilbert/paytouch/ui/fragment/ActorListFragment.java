@@ -24,6 +24,7 @@ import timber.log.Timber;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.ActorController;
+import uk.dan_gilbert.paytouch.data.Filter;
 import uk.dan_gilbert.paytouch.data.adapter.ActorListAdapter;
 import uk.dan_gilbert.paytouch.data.model.Actor;
 
@@ -38,8 +39,8 @@ import uk.dan_gilbert.paytouch.data.model.Actor;
  */
 public class ActorListFragment extends ListFragment {
 
-    @Inject
-    ActorController actorController;
+    @Inject ActorController actorController;
+    @Inject Filter filter;
 
     @InjectView(android.R.id.list) ListView listView;
 
@@ -101,9 +102,9 @@ public class ActorListFragment extends ListFragment {
         View v = inflater.inflate(R.layout.fragment_actor_list, container, false);
 
         ButterKnife.inject(this, v);
-        listView.setOnScrollListener(new EndlessScrollListener());
+//        listView.setOnScrollListener(new EndlessScrollListener());
 
-        listView.addFooterView(inflater.inflate(R.layout.loading_view, container, false));
+//        listView.addFooterView(inflater.inflate(R.layout.loading_view, container, false));
 
         return v;
     }
@@ -135,6 +136,17 @@ public class ActorListFragment extends ListFragment {
             setListAdapter(adapter);
         }
 
+        if (actors.size() == 0) {
+
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.no_actors_found))
+                    .setPositiveButton("OK", null)
+                    .create()
+                    .show();
+
+            return;
+        }
+
         adapter.setActors(actors);
         adapter.notifyDataSetChanged();
     };
@@ -146,6 +158,16 @@ public class ActorListFragment extends ListFragment {
         adapter.clear();
 
         actorController.getActorsSortedByPopularity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(actorResultAction);
+    }
+
+    public void loadActorsByFilter() {
+        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
+        adapter.clear();
+
+        actorController.getActorsWithFilter(filter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(actorResultAction);

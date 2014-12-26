@@ -48,6 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_name"
+            android:singleLine="true"
+            android:lines="1"
+            android:maxLines="1"
             android:background="@drawable/dark_rounded_background"
             android:padding="10dp"
             android:textColorHint="@color/white"
@@ -65,7 +68,14 @@
             android:id="@+id/location_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_name"/>
+            android:singleLine="true"
+            android:lines="1"
+            android:maxLines="1"
+            android:background="@drawable/dark_rounded_background"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:hint="@string/enter_location"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -109,7 +119,7 @@
             android:id="@+id/popularity_range_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tickCount="101"
+            app:tickCount="6"
             app:tickHeight="0dp"
             app:thumbRadius="3dp"
             app:connectingLineColor="@color/black"
@@ -131,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="100"/>
+                android:text="5"/>
             </LinearLayout>
 
         <Button

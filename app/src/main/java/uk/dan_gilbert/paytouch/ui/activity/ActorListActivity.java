@@ -9,17 +9,23 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.edmodo.rangebar.RangeBar;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import timber.log.Timber;
+import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
+import uk.dan_gilbert.paytouch.data.Filter;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment;
 
@@ -58,7 +64,13 @@ public class ActorListActivity extends ActionBarActivity
     @InjectView(R.id.rangeBarLow) TextView rangeBarLow;
     @InjectView(R.id.rangeBarHigh) TextView rangeBarHigh;
 
+    @InjectView(R.id.name_search) EditText nameSearch;
+    @InjectView(R.id.location_search) EditText locationSearch;
+    @InjectView(R.id.radiogroup_is_top) RadioGroup radioGroup;
+
     @InjectView(R.id.search_title) TextView searchTitle;
+
+    @Inject Filter filter;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -70,6 +82,8 @@ public class ActorListActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor_list);
+
+        PayTouchApp.get(this).inject(this);
 
         ButterKnife.inject(this);
 
@@ -148,6 +162,9 @@ public class ActorListActivity extends ActionBarActivity
         sortButton.setSelected(false);
         orderByContainer.setVisibility(View.GONE);
 
+        filter.clearFilter();
+        setFilterDetails();
+
         fragment.loadActorsOrderedByName();
     }
 
@@ -158,6 +175,9 @@ public class ActorListActivity extends ActionBarActivity
         sortButton.setSelected(false);
         orderByContainer.setVisibility(View.GONE);
 
+        filter.clearFilter();
+        setFilterDetails();
+
         fragment.loadActorsOrderedByPopularity();
     }
 
@@ -167,6 +187,30 @@ public class ActorListActivity extends ActionBarActivity
         orderByContainer.setVisibility(View.GONE);
 
         toggleFilterDrawer();
+    }
+
+    // TODO location
+    private void setFilterDetails() {
+        nameSearch.setText(filter.name);
+        locationSearch.setText(filter.location);
+        radioGroup.check(filter.isTop ? R.id.radio_yes_button : R.id.radio_no_button);
+        rangeBar.setThumbIndices(filter.ratingLow, filter.ratingHigh);
+    }
+
+    // TODO location
+    @OnClick(R.id.search_button)
+    public void searchButtonPressed() {
+        filter.name = nameSearch.getText().toString();
+        filter.location = locationSearch.getText().toString();
+        filter.isTop = radioGroup.getCheckedRadioButtonId() == R.id.radio_yes_button;
+        filter.ratingLow = rangeBar.getLeftIndex();
+        filter.ratingHigh = rangeBar.getRightIndex();
+
+        toggleFilterDrawer();
+
+        ActorListFragment fragment = (ActorListFragment) getSupportFragmentManager().findFragmentById(R.id.actor_list);
+
+        fragment.loadActorsByFilter();
     }
 
     @OnClick(R.id.close_button)
@@ -195,6 +239,7 @@ public class ActorListActivity extends ActionBarActivity
                 drawerContainer.setLayoutParams(lp);
             });
         } else {
+            setFilterDetails();
             drawerShade.setAlpha(0);
             drawerShade.setVisibility(View.VISIBLE);
             int rightMargin = lp.rightMargin;

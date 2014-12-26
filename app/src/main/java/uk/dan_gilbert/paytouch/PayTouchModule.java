@@ -10,6 +10,7 @@ import uk.dan_gilbert.paytouch.api.APIModule;
 import uk.dan_gilbert.paytouch.api.ActorService;
 import uk.dan_gilbert.paytouch.data.ActorController;
 import uk.dan_gilbert.paytouch.data.Filter;
+import uk.dan_gilbert.paytouch.ui.activity.ActorListActivity;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment;
 
@@ -22,6 +23,7 @@ import uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment;
         },
         injects = {
                 PayTouchApp.class,
+                ActorListActivity.class,
                 ActorListFragment.class,
                 ActorDetailFragment.class,
         },

@@ -72,4 +72,17 @@ public class ActorController {
             subscriber.onCompleted();
         });
     }
+
+    public Observable<LinkedHashMap<Integer, Actor>> getActorsWithFilter(Filter filter) {
+        return Observable.create(subscriber -> {
+            List<Actor> actorList = Query.many(Actor.class, "SELECT * FROM actors WHERE name LIKE ? AND location LIKE ? AND popularity > ? AND popularity < ? AND top = ?", '%'+filter.name+'%', '%'+filter.location+'%', filter.ratingLow, filter.ratingHigh, filter.isTop)
+                    .get().asList();
+            LinkedHashMap<Integer, Actor> orderedActors = new LinkedHashMap<>();
+            for (Actor a : actorList) {
+                orderedActors.put(a.identifier, a);
+            }
+            subscriber.onNext(orderedActors);
+            subscriber.onCompleted();
+        });
+    }
 }
