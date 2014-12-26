@@ -222,6 +222,7 @@ public class ActorListFragment extends ListFragment {
                                 .setTitle("Error")
                                 .setMessage(message)
                                 .setNegativeButton("OK", null)
+                                .setPositiveButton("Retry", (dialog, which) -> loadActors(1))
                                 .create()
                                 .show();
 
