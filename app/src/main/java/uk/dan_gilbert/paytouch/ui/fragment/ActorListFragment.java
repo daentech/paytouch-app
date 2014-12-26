@@ -121,7 +121,9 @@ public class ActorListFragment extends ListFragment {
 
         ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
 
-        adapter.clear();
+        if (adapter != null) {
+            adapter.clear();
+        }
 
         actorController.getActorsSortedByName()
                 .subscribeOn(Schedulers.io())
@@ -155,7 +157,10 @@ public class ActorListFragment extends ListFragment {
     public void loadActorsOrderedByPopularity() {
 
         ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
-        adapter.clear();
+
+        if (adapter != null) {
+            adapter.clear();
+        }
 
         actorController.getActorsSortedByPopularity()
                 .subscribeOn(Schedulers.io())
@@ -165,7 +170,9 @@ public class ActorListFragment extends ListFragment {
 
     public void loadActorsByFilter() {
         ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
-        adapter.clear();
+        if (adapter != null) {
+            adapter.clear();
+        }
 
         actorController.getActorsWithFilter(filter)
                 .subscribeOn(Schedulers.io())
