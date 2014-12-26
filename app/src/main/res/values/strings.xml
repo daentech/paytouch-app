@@ -4,5 +4,6 @@
     <string name="app_name">PayTouch</string>
     <string name="title_actor_detail">Actor Detail</string>
     <string name="paytouch_logo">PayTouch</string>
+    <string name="back_button">back button</string>
 
 </resources>

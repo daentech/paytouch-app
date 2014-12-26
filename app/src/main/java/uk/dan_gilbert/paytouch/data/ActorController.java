@@ -1,6 +1,6 @@
 package uk.dan_gilbert.paytouch.data;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 
 import rx.Observable;
 import uk.dan_gilbert.paytouch.api.ActorService;
@@ -14,20 +14,29 @@ public class ActorController {
 
     private ActorService actorService;
 
+    private LinkedHashMap<Integer, Actor> actors = new LinkedHashMap<>();
+
     public ActorController(ActorService actorService) {
         this.actorService = actorService;
     }
 
-    public Actor getActor(long id) {
-        return null;
+    public Actor getActor(int id) {
+        if (actors == null) {
+            return null;
+        }
+
+        return actors.get(id);
     }
 
-    public Observable<List<Actor>> getActors(int pageNumber) {
+    public Observable<LinkedHashMap<Integer, Actor>> getActors(int pageNumber) {
         // Use the current filters
         return Observable.create(subscriber -> {
             try {
                 ActorsResponse response = actorService.getActors(pageNumber);;
-                subscriber.onNext(response.actors);
+                for (Actor a : response.actors) {
+                    actors.put(a.identifier, a);
+                }
+                subscriber.onNext(actors);
                 subscriber.onCompleted();
             } catch (Exception e) {
                 subscriber.onError(e);

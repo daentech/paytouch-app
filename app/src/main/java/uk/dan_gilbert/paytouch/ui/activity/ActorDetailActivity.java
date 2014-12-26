@@ -2,12 +2,15 @@ package uk.dan_gilbert.paytouch.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import uk.dan_gilbert.paytouch.R;
+import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
 
 
 /**
@@ -21,13 +24,20 @@ import uk.dan_gilbert.paytouch.R;
  */
 public class ActorDetailActivity extends ActionBarActivity {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor_detail);
 
+        ButterKnife.inject(this);
+
         // Show the Up button in the action bar.
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
+        getSupportActionBar().setTitle("");
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -42,8 +52,8 @@ public class ActorDetailActivity extends ActionBarActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ActorDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ActorDetailFragment.ARG_ITEM_ID));
+            arguments.putInt(ActorDetailFragment.ARG_ITEM_ID,
+                    getIntent().getIntExtra(ActorDetailFragment.ARG_ITEM_ID, 0));
             ActorDetailFragment fragment = new ActorDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

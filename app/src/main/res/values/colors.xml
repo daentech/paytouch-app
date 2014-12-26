@@ -7,4 +7,5 @@
     <color name="dark_item_text_color">#FFFFFF</color>
     <color name="light_item_text_color">#484c57</color>
     <color name="toolbar_background">#010101</color>
+    <color name="toolbar_background_light">#ffffff</color>
 </resources>

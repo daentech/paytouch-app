@@ -21,7 +21,6 @@
         </activity>
         <activity
             android:name=".ui.activity.ActorDetailActivity"
-            android:label="@string/title_actor_detail"
             android:parentActivityName=".ui.activity.ActorListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,9 +27,9 @@ import uk.dan_gilbert.paytouch.ui.transformation.CircleTransform;
 public class ActorListAdapter extends BaseAdapter {
 
     private Context ctx;
-    private List<Actor> actors = new ArrayList<>();
+    private LinkedHashMap<Integer, Actor> actors = new LinkedHashMap<>();
 
-    public ActorListAdapter(Context context, List<Actor> actors) {
+    public ActorListAdapter(Context context, LinkedHashMap<Integer, Actor> actors) {
         super();
         if (actors != null) {
             this.actors = actors;
@@ -45,12 +44,12 @@ public class ActorListAdapter extends BaseAdapter {
 
     @Override
     public Actor getItem(int position) {
-        return actors.get(position);
+        return (Actor) actors.values().toArray()[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return actors.get(position).identifier;
+        return ((Actor)actors.values().toArray()[position]).identifier;
     }
 
     @Override
@@ -71,8 +70,8 @@ public class ActorListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void addActors(List<Actor> actors) {
-        this.actors.addAll(actors);
+    public void setActors(LinkedHashMap<Integer, Actor> actors) {
+        this.actors = actors;
     }
 
     static class ViewHolder {

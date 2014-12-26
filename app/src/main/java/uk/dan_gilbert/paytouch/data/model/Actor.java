@@ -12,7 +12,7 @@ public class Actor {
 
     public String name;
     public boolean adult;
-    public long identifier;
+    public int identifier;
     public Film[] knownFor;
     public float popularity;
     public String profilePath;
