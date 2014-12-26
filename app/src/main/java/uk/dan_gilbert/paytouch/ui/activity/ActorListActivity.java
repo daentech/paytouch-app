@@ -1,12 +1,24 @@
 package uk.dan_gilbert.paytouch.ui.activity;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import timber.log.Timber;
+import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorDetailFragment;
 import uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment;
-import uk.dan_gilbert.paytouch.R;
 
 
 /**
@@ -25,8 +37,18 @@ import uk.dan_gilbert.paytouch.R;
  * {@link uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class ActorListActivity extends FragmentActivity
+public class ActorListActivity extends ActionBarActivity
         implements ActorListFragment.Callbacks {
+
+    @InjectView(R.id.toolbar) Toolbar toolbar;
+    @InjectView(R.id.button_sort) ImageButton sortButton;
+    @InjectView(R.id.button_filter) ImageButton filterButton;
+    @InjectView(R.id.order_by_container) View orderByContainer;
+    @InjectView(R.id.order_by_name) Button orderByNameButton;
+    @InjectView(R.id.order_by_popularity) Button orderByPopularityButton;
+
+    @InjectView(R.id.drawer_shade) View drawerShade;
+    @InjectView(R.id.drawer_container) View drawerContainer;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -38,6 +60,14 @@ public class ActorListActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor_list);
+
+        ButterKnife.inject(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        orderByNameButton.setText(Html.fromHtml((String) orderByNameButton.getText()));
+        orderByPopularityButton.setText(Html.fromHtml((String) orderByPopularityButton.getText()));
 
         if (findViewById(R.id.actor_detail_container) != null) {
             // The detail container view will be present only in the
@@ -81,5 +111,82 @@ public class ActorListActivity extends FragmentActivity
             detailIntent.putExtra(ActorDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
+    }
+
+    @OnClick(R.id.button_sort)
+    public void sortButtonPressed(ImageButton button) {
+        Timber.d("Sort button pressed");
+        button.setSelected(!button.isSelected());
+        orderByContainer.setVisibility(button.isSelected() ? View.VISIBLE : View.GONE);
+        int right = button.getRight();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) orderByContainer.getLayoutParams();
+        lp.setMargins(right - (int)(184 * getResources().getDisplayMetrics().density), 0, 0, 0);
+        orderByContainer.setLayoutParams(lp);
+    }
+
+    @OnClick(R.id.button_filter)
+    public void filterButtonPressed(ImageButton button) {
+        sortButton.setSelected(false);
+        orderByContainer.setVisibility(View.GONE);
+
+        toggleFilterDrawer();
+    }
+
+    @OnClick(R.id.close_button)
+    public void closeButtonPressed(ImageButton button) {
+        toggleFilterDrawer();
+    }
+
+    ValueAnimator drawerAnimator;
+
+    public void toggleFilterDrawer() {
+
+        if (drawerAnimator != null) {
+            drawerAnimator.cancel();
+        }
+
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) drawerContainer.getLayoutParams();
+
+
+        if (drawerShade.getVisibility() == View.VISIBLE) {
+            drawerAnimator = ValueAnimator.ofFloat(drawerShade.getAlpha(), 0.0f);
+
+            int targetRightMargin = -drawerContainer.getWidth();
+            drawerAnimator.addUpdateListener(animation -> {
+                drawerShade.setAlpha((Float) animation.getAnimatedValue());
+                lp.rightMargin = (int)(-(1.0f - (float)animation.getAnimatedValue()) * lp.width);
+                drawerContainer.setLayoutParams(lp);
+            });
+        } else {
+            drawerShade.setAlpha(0);
+            drawerShade.setVisibility(View.VISIBLE);
+            int rightMargin = lp.rightMargin;
+            drawerAnimator = ValueAnimator.ofFloat(0, 1.0f);
+            drawerAnimator.addUpdateListener(animation -> {
+                drawerShade.setAlpha((Float) animation.getAnimatedValue());
+                lp.rightMargin = (int)(rightMargin * (1 - (float)animation.getAnimatedValue()));
+                drawerContainer.setLayoutParams(lp);
+            });
+        }
+
+        drawerAnimator.addListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animation) {}
+            @Override public void onAnimationRepeat(Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                drawerAnimator = null;
+                if (drawerShade.getAlpha() == 0) {
+                    drawerShade.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                drawerAnimator = null;
+            }
+        });
+
+        drawerAnimator.start();
     }
 }

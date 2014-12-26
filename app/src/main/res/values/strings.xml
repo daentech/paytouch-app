@@ -7,5 +7,9 @@
     <string name="back_button">back button</string>
     <string name="filmography">Filmography</string>
     <string name="film_poster">film poster</string>
+    <string name="order_by">Order By</string>
+    <string name="filter">filter</string>
+    <string name="order_by_name"><![CDATA[order by <b>name</b>]]></string>
+    <string name="order_by_popularity"><![CDATA[order by <b>popularity</b>]]></string>
 
 </resources>

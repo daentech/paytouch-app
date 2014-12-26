@@ -10,4 +10,7 @@
     <color name="toolbar_background_light">#ffffff</color>
     <color name="grey_background_color">#eeeeee</color>
     <color name="blue_bar_color">#01b7e6</color>
+    <color name="button_green">#00a191</color>
+    <color name="black">#000000</color>
+    <color name="semi_transparent_black">#99000000</color>
 </resources>

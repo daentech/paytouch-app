@@ -1,24 +1,53 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:background="@color/toolbar_background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/paytouch"
-            android:contentDescription="@string/paytouch_logo" />
-        </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar_layout" />
     <fragment
         android:id="@+id/actor_list"
         android:name="uk.dan_gilbert.paytouch.ui.fragment.ActorListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         tools:context=".ActorListActivity"
         tools:layout="@android:layout/list_content" />
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/order_by_container"
+        android:visibility="gone"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignRight="@+id/button_sort"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/order_by_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="left"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:text="@string/order_by_name"
+            android:background="@color/button_green"
+            />
+        <Button
+            android:id="@+id/order_by_popularity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="left"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:text="@string/order_by_popularity"
+            android:background="@color/button_green"
+            />
+        </LinearLayout>
+    <View
+        android:id="@+id/drawer_shade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/semi_transparent_black"
+        android:visibility="gone"/>
+    <include layout="@layout/drawer_container" />
+</RelativeLayout>
