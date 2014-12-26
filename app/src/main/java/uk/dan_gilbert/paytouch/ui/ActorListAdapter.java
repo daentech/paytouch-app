@@ -143,5 +143,4 @@ public class ActorListAdapter extends BaseAdapter {
                     .into(actorProfileImage);
         }
     }
-
 }

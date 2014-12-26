@@ -7,10 +7,14 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import retrofit.RetrofitError;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -18,7 +22,6 @@ import timber.log.Timber;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.ActorController;
-import uk.dan_gilbert.paytouch.data.model.Actor;
 import uk.dan_gilbert.paytouch.ui.ActorListAdapter;
 
 /**
@@ -34,6 +37,8 @@ public class ActorListFragment extends ListFragment {
 
     @Inject
     ActorController actorController;
+
+    @InjectView(android.R.id.list) ListView listView;
 
     private int pageNumber;
 
@@ -92,7 +97,14 @@ public class ActorListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_actor_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_actor_list, container, false);
+
+        ButterKnife.inject(this, v);
+        listView.setOnScrollListener(new EndlessScrollListener());
+
+        listView.addFooterView(inflater.inflate(R.layout.loading_view, container, false));
+
+        return v;
     }
 
     @Override
@@ -105,15 +117,13 @@ public class ActorListFragment extends ListFragment {
 
     private void loadActors(int pageNumber) {
 
+        Timber.d("Loading page: " + pageNumber);
+
         actorController.getActors(pageNumber)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(actors -> {
                     Timber.d("Got actors");
-
-                    for (Actor a : actors) {
-                        Timber.d(a.name);
-                    }
 
                     if (getListAdapter() == null) {
                         setListAdapter(new ActorListAdapter(getActivity(), null));
@@ -244,5 +254,42 @@ public class ActorListFragment extends ListFragment {
         }
 
         mActivatedPosition = position;
+    }
+
+    public class EndlessScrollListener implements AbsListView.OnScrollListener {
+
+        private int visibleThreshold = 5;
+        private int currentPage = 1;
+        private int previousTotal = 0;
+        private boolean loading = true;
+
+        public EndlessScrollListener() {
+        }
+        public EndlessScrollListener(int visibleThreshold) {
+            this.visibleThreshold = visibleThreshold;
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+                             int visibleItemCount, int totalItemCount) {
+            if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                    currentPage++;
+                }
+            }
+            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                // I load the next page of gigs using a background task,
+                // but you can call any function here.
+                Timber.d("Loading next page");
+                loadActors(currentPage);
+                loading = true;
+            }
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
     }
 }
