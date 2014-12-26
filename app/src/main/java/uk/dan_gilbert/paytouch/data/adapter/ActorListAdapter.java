@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -87,6 +88,7 @@ public class ActorListAdapter extends BaseAdapter {
         @InjectView(R.id.actor_location) TextView actorLocation;
         @InjectView(R.id.actor_description) TextView actorDescription;
         @InjectView(R.id.actor_profile_image) ImageView actorProfileImage;
+        @InjectView(R.id.actor_popularity) TextView actorPopularity;
 
 
         public ViewHolder(View v) {
@@ -135,6 +137,7 @@ public class ActorListAdapter extends BaseAdapter {
             actorName.setText(Html.fromHtml(actor.displayName()));
             actorLocation.setText(actor.location);
             actorDescription.setText(actor.description);
+            actorPopularity.setText(String.format(Locale.getDefault(), "%.2f", actor.popularity));
 
             Picasso.with(ctx).load(actor.profilePath)
                     .placeholder(R.drawable.profile_placeholder)

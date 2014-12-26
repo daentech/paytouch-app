@@ -54,6 +54,7 @@
         android:id="@+id/actor_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:textColor="@color/light_item_text_color"
         tools:text="Lorem ipsum dolor sit amet. Consectetuer adipiscing elit" />
     <TextView

@@ -54,23 +54,33 @@
                     tools:text="New York" />
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
+        <TextView
+            android:id="@+id/actor_description"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginRight="70dp"
+            android:textColor="@color/white"
+            tools:text="Lorem ipsum dolor sit amet. Consectetuer adipiscing elit" />
 
-            <TextView
-                android:id="@+id/actor_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                tools:text="Lorem ipsum dolor sit amet. Consectetuer adipiscing elit" />
-
-            <View
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="#cccccc"
-                android:layout_gravity="bottom"/>
-        </LinearLayout>
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/grey_rounded_background"
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical"
+        android:layout_margin="5dp">
+        <View
+            android:layout_height="10dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/blue_rounded_top"/>
+        <TextView
+            android:id="@+id/actor_popularity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/light_item_text_color"
+            android:layout_centerInParent="true"
+            tools:text="20,01" />
+        </RelativeLayout>
 </FrameLayout>

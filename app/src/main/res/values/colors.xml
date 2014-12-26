@@ -9,4 +9,5 @@
     <color name="toolbar_background">#010101</color>
     <color name="toolbar_background_light">#ffffff</color>
     <color name="grey_background_color">#eeeeee</color>
+    <color name="blue_bar_color">#01b7e6</color>
 </resources>
