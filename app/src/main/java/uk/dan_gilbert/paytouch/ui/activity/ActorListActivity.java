@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.edmodo.rangebar.RangeBar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -50,6 +53,13 @@ public class ActorListActivity extends ActionBarActivity
     @InjectView(R.id.drawer_shade) View drawerShade;
     @InjectView(R.id.drawer_container) View drawerContainer;
 
+    @InjectView(R.id.popularity_range_bar) RangeBar rangeBar;
+
+    @InjectView(R.id.rangeBarLow) TextView rangeBarLow;
+    @InjectView(R.id.rangeBarHigh) TextView rangeBarHigh;
+
+    @InjectView(R.id.search_title) TextView searchTitle;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -68,6 +78,13 @@ public class ActorListActivity extends ActionBarActivity
 
         orderByNameButton.setText(Html.fromHtml((String) orderByNameButton.getText()));
         orderByPopularityButton.setText(Html.fromHtml((String) orderByPopularityButton.getText()));
+
+        rangeBar.setOnRangeBarChangeListener((rangeBar1, i, i2) -> {
+            rangeBarLow.setText(String.valueOf(i));
+            rangeBarHigh.setText(String.valueOf(i2));
+        });
+
+        searchTitle.requestFocus();
 
         if (findViewById(R.id.actor_detail_container) != null) {
             // The detail container view will be present only in the
@@ -122,6 +139,26 @@ public class ActorListActivity extends ActionBarActivity
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) orderByContainer.getLayoutParams();
         lp.setMargins(right - (int)(184 * getResources().getDisplayMetrics().density), 0, 0, 0);
         orderByContainer.setLayoutParams(lp);
+    }
+
+    @OnClick(R.id.order_by_name)
+    public void orderByNamePressed() {
+        ActorListFragment fragment = (ActorListFragment) getSupportFragmentManager().findFragmentById(R.id.actor_list);
+
+        sortButton.setSelected(false);
+        orderByContainer.setVisibility(View.GONE);
+
+        fragment.loadActorsOrderedByName();
+    }
+
+    @OnClick(R.id.order_by_popularity)
+    public void orderByPopularityPressed() {
+        ActorListFragment fragment = (ActorListFragment) getSupportFragmentManager().findFragmentById(R.id.actor_list);
+
+        sortButton.setSelected(false);
+        orderByContainer.setVisibility(View.GONE);
+
+        fragment.loadActorsOrderedByPopularity();
     }
 
     @OnClick(R.id.button_filter)

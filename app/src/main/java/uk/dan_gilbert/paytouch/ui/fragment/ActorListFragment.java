@@ -10,18 +10,22 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import java.util.LinkedHashMap;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.RetrofitError;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 import uk.dan_gilbert.paytouch.PayTouchApp;
 import uk.dan_gilbert.paytouch.R;
 import uk.dan_gilbert.paytouch.data.ActorController;
 import uk.dan_gilbert.paytouch.data.adapter.ActorListAdapter;
+import uk.dan_gilbert.paytouch.data.model.Actor;
 
 /**
  * A list fragment representing a list of Actors. This fragment
@@ -38,8 +42,6 @@ public class ActorListFragment extends ListFragment {
     ActorController actorController;
 
     @InjectView(android.R.id.list) ListView listView;
-
-    private int pageNumber;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -114,25 +116,48 @@ public class ActorListFragment extends ListFragment {
 
     }
 
-    private void loadActors(int pageNumber) {
+    public void loadActorsOrderedByName() {
 
-        Timber.d("Loading page: " + pageNumber);
+        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
+
+        adapter.clear();
+
+        actorController.getActorsSortedByName()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(actorResultAction);
+    }
+
+    private Action1<LinkedHashMap<Integer, Actor>> actorResultAction = (Action1<LinkedHashMap<Integer, Actor>>) actors -> {
+        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
+        if (getListAdapter() == null) {
+            adapter = new ActorListAdapter(getActivity(), null);
+            setListAdapter(adapter);
+        }
+
+        adapter.setActors(actors);
+        adapter.notifyDataSetChanged();
+    };
+
+
+    public void loadActorsOrderedByPopularity() {
+
+        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
+        adapter.clear();
+
+        actorController.getActorsSortedByPopularity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(actorResultAction);
+    }
+
+    private void loadActors(int pageNumber) {
 
         actorController.getActors(pageNumber)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(actors -> {
-                    Timber.d("Got actors");
-
-                    if (getListAdapter() == null) {
-                        setListAdapter(new ActorListAdapter(getActivity(), null));
-                    }
-
-                    ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
-
-                    adapter.setActors(actors);
-                    adapter.notifyDataSetChanged();
-                }, throwable -> {
+                .subscribe(actorResultAction,
+                throwable -> {
                     if (throwable instanceof RetrofitError) {
                         RetrofitError err = (RetrofitError)throwable;
                         String message = null;

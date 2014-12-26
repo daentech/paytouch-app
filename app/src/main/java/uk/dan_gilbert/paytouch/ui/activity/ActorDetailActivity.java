@@ -1,8 +1,6 @@
 package uk.dan_gilbert.paytouch.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -73,7 +71,8 @@ public class ActorDetailActivity extends ActionBarActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, ActorListActivity.class));
+//            NavUtils.navigateUpTo(this, new Intent(this, ActorListActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

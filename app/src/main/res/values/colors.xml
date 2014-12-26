@@ -13,4 +13,5 @@
     <color name="button_green">#00a191</color>
     <color name="black">#000000</color>
     <color name="semi_transparent_black">#99000000</color>
+    <color name="search_button_green">#72a201</color>
 </resources>

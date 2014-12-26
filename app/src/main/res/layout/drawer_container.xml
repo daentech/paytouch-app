@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_container"
     android:layout_width="280dp"
     android:layout_height="match_parent"
@@ -8,14 +8,141 @@
     android:layout_alignParentTop="true"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
-    android:layout_marginRight="-280dp">
+    android:layout_marginRight="-280dp"
+    android:padding="10dp">
     <ImageButton
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cross"/>
+        android:src="@drawable/cross"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"/>
+    <TextView
+        android:id="@+id/search_title"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/button_green"
+        android:gravity="left|center_vertical"
+        android:drawableLeft="@drawable/mglass_green"
+        android:text="@string/search"
+        />
+    <LinearLayout
+        android:layout_below="@+id/search_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello world"/>
-</LinearLayout>
+        android:text="@string/name_title"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/name_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_name"
+            android:background="@drawable/dark_rounded_background"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location_title"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/location_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/is_top_title"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <RadioGroup
+            android:id="@+id/radiogroup_is_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/radio_yes_button">
+            <RadioButton
+                android:id="@+id/radio_yes_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/yes"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:button="@drawable/radiobutton_selector"
+                android:tag="0"/>
+            <RadioButton
+                android:id="@+id/radio_no_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:button="@drawable/radiobutton_selector"
+                android:tag="1"/>
+            </RadioGroup>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/popularity_title"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"/>
+        <com.edmodo.rangebar.RangeBar
+            android:id="@+id/popularity_range_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tickCount="101"
+            app:tickHeight="0dp"
+            app:thumbRadius="3dp"
+            app:connectingLineColor="@color/black"
+            app:thumbColorNormal="@color/black"
+            app:thumbColorPressed="@color/semi_transparent_black"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/rangeBarLow"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="0"/>
+            <TextView
+                android:id="@+id/rangeBarHigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="100"/>
+            </LinearLayout>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/search"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:background="@drawable/search_button_green_rounded"/>
+    </LinearLayout>
+</RelativeLayout>

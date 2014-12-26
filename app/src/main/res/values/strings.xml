@@ -11,5 +11,13 @@
     <string name="filter">filter</string>
     <string name="order_by_name"><![CDATA[order by <b>name</b>]]></string>
     <string name="order_by_popularity"><![CDATA[order by <b>popularity</b>]]></string>
+    <string name="search">Search</string>
+    <string name="enter_name">write name</string>
+    <string name="name_title">name</string>
+    <string name="location_title">location</string>
+    <string name="is_top_title">is top?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="popularity_title">popularity</string>
 
 </resources>

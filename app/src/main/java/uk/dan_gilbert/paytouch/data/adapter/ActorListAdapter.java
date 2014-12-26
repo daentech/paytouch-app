@@ -75,6 +75,11 @@ public class ActorListAdapter extends BaseAdapter {
         this.actors = actors;
     }
 
+    public void clear() {
+        actors = new LinkedHashMap<>();
+        notifyDataSetChanged();
+    }
+
     static class ViewHolder {
 
         Resources res;
