@@ -146,7 +146,7 @@ public class ActorListAdapter extends BaseAdapter {
 
             Picasso.with(ctx).load(actor.profilePath)
                     .placeholder(R.drawable.profile_placeholder)
-                    .transform(new CircleTransform())
+                    .transform(new CircleTransform(ctx))
                     .into(actorProfileImage);
         }
     }
