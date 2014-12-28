@@ -86,6 +86,7 @@ public class ActorListActivity extends ActionBarActivity
             R.id.is_top_title,
             R.id.radio_yes_button,
             R.id.radio_no_button,
+            R.id.radio_all_button,
             R.id.popularity_title,
             R.id.rangeBarHigh,
             R.id.rangeBarLow,
@@ -184,10 +185,9 @@ public class ActorListActivity extends ActionBarActivity
         sortButton.setSelected(false);
         orderByContainer.setVisibility(View.GONE);
 
-        filter.clearFilter();
-        setFilterDetails();
+        filter.orderBy = Filter.ORDERBY.NAME;
 
-        fragment.loadActorsOrderedByName();
+        fragment.loadActorsByFilter();
     }
 
     @OnClick(R.id.order_by_popularity)
@@ -197,10 +197,9 @@ public class ActorListActivity extends ActionBarActivity
         sortButton.setSelected(false);
         orderByContainer.setVisibility(View.GONE);
 
-        filter.clearFilter();
-        setFilterDetails();
+        filter.orderBy = Filter.ORDERBY.POPULARITY;
 
-        fragment.loadActorsOrderedByPopularity();
+        fragment.loadActorsByFilter();
     }
 
     @OnClick(R.id.button_filter)
@@ -215,7 +214,19 @@ public class ActorListActivity extends ActionBarActivity
     private void setFilterDetails() {
         nameSearch.setText(filter.name);
         locationSearch.setText(filter.location);
-        radioGroup.check(filter.isTop ? R.id.radio_yes_button : R.id.radio_no_button);
+        int radioId = R.id.radio_no_button;
+        switch (filter.isTop) {
+            case NO:
+                radioId = R.id.radio_no_button;
+                break;
+            case YES:
+                radioId = R.id.radio_yes_button;
+                break;
+            case ALL:
+                radioId = R.id.radio_all_button;
+                break;
+        }
+        radioGroup.check(radioId);
         rangeBar.setThumbIndices(filter.ratingLow, filter.ratingHigh);
     }
 
@@ -224,7 +235,19 @@ public class ActorListActivity extends ActionBarActivity
     public void searchButtonPressed() {
         filter.name = nameSearch.getText().toString();
         filter.location = locationSearch.getText().toString();
-        filter.isTop = radioGroup.getCheckedRadioButtonId() == R.id.radio_yes_button;
+
+        switch (radioGroup.getCheckedRadioButtonId()) {
+            case R.id.radio_no_button:
+                filter.isTop = Filter.IS_TOP.NO;
+                break;
+            case R.id.radio_yes_button:
+                filter.isTop = Filter.IS_TOP.YES;
+                break;
+            case R.id.radio_all_button:
+                filter.isTop = Filter.IS_TOP.ALL;
+                break;
+        }
+
         filter.ratingLow = rangeBar.getLeftIndex();
         filter.ratingHigh = rangeBar.getRightIndex();
 

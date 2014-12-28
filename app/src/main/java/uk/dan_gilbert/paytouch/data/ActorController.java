@@ -1,5 +1,6 @@
 package uk.dan_gilbert.paytouch.data;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -47,35 +48,29 @@ public class ActorController {
 
     }
 
-    public Observable<LinkedHashMap<Integer, Actor>> getActorsSortedByName() {
-        return Observable.create(subscriber -> {
-           List<Actor> actorList = Query.many(Actor.class, "SELECT * FROM actors ORDER BY name ASC")
-                   .get().asList();
-            LinkedHashMap<Integer, Actor> orderedActors = new LinkedHashMap<>();
-            for (Actor a : actorList) {
-                orderedActors.put(a.identifier, a);
-            }
-            subscriber.onNext(orderedActors);
-            subscriber.onCompleted();
-        });
-    }
-
-    public Observable<LinkedHashMap<Integer, Actor>> getActorsSortedByPopularity() {
-        return Observable.create(subscriber -> {
-            List<Actor> actorList = Query.many(Actor.class, "SELECT * FROM actors ORDER BY popularity DESC")
-                    .get().asList();
-            LinkedHashMap<Integer, Actor> orderedActors = new LinkedHashMap<>();
-            for (Actor a : actorList) {
-                orderedActors.put(a.identifier, a);
-            }
-            subscriber.onNext(orderedActors);
-            subscriber.onCompleted();
-        });
-    }
-
     public Observable<LinkedHashMap<Integer, Actor>> getActorsWithFilter(Filter filter) {
         return Observable.create(subscriber -> {
-            List<Actor> actorList = Query.many(Actor.class, "SELECT * FROM actors WHERE name LIKE ? AND location LIKE ? AND popularity > ? AND popularity < ? AND top = ?", '%'+filter.name+'%', '%'+filter.location+'%', filter.ratingLow, filter.ratingHigh, filter.isTop)
+            String query = "SELECT * FROM actors WHERE name LIKE ? AND location LIKE ? AND popularity > ? AND popularity < ?";
+
+            ArrayList<String> args = new ArrayList<>();
+
+            args.add('%'+filter.name+'%');
+            args.add('%'+filter.location+'%');
+            args.add(String.valueOf(filter.ratingLow));
+            args.add(String.valueOf(filter.ratingHigh));
+
+            if (filter.isTop != Filter.IS_TOP.ALL) {
+                query = query + "  AND top = ?";
+                args.add(String.valueOf(filter.isTop.ordinal()));
+            }
+
+            if (filter.orderBy == Filter.ORDERBY.NAME) {
+                query = query + " ORDER BY name ASC";
+            } else if (filter.orderBy == Filter.ORDERBY.POPULARITY) {
+                query = query + " ORDER BY popularity DESC";
+            }
+
+            List<Actor> actorList = Query.many(Actor.class, query, args.toArray(new String[args.size()]))
                     .get().asList();
             LinkedHashMap<Integer, Actor> orderedActors = new LinkedHashMap<>();
             for (Actor a : actorList) {

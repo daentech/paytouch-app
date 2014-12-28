@@ -98,6 +98,15 @@
             android:layout_height="wrap_content"
             android:checkedButton="@+id/radio_yes_button">
             <RadioButton
+                android:id="@+id/radio_all_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/all"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:button="@drawable/radiobutton_selector"
+                android:tag="2"/>
+            <RadioButton
                 android:id="@+id/radio_yes_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +137,7 @@
             android:id="@+id/popularity_range_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tickCount="6"
+            app:tickCount="101"
             app:tickHeight="0dp"
             app:thumbRadius="3dp"
             app:connectingLineColor="@color/black"
@@ -150,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="5"/>
+                android:text="100"/>
             </LinearLayout>
     </LinearLayout>
     <Button

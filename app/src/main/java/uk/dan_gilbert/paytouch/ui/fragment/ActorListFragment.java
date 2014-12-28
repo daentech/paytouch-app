@@ -42,6 +42,10 @@ public class ActorListFragment extends ListFragment {
     @Inject ActorController actorController;
     @Inject Filter filter;
 
+    private boolean endlessScroll = true;
+    private View footerView;
+
+
     @InjectView(android.R.id.list) ListView listView;
 
     /**
@@ -60,6 +64,7 @@ public class ActorListFragment extends ListFragment {
      * The current activated item position. Only used on tablets.
      */
     private int mActivatedPosition = ListView.INVALID_POSITION;
+
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -102,9 +107,13 @@ public class ActorListFragment extends ListFragment {
         View v = inflater.inflate(R.layout.fragment_actor_list, container, false);
 
         ButterKnife.inject(this, v);
-//        listView.setOnScrollListener(new EndlessScrollListener());
+        listView.setOnScrollListener(new EndlessScrollListener());
 
-//        listView.addFooterView(inflater.inflate(R.layout.loading_view, container, false));
+        footerView = inflater.inflate(R.layout.loading_view, container, false);
+
+        listView.addFooterView(footerView);
+
+        loadActors(1);
 
         return v;
     }
@@ -112,26 +121,10 @@ public class ActorListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        loadActors(1);
-
-    }
-
-    public void loadActorsOrderedByName() {
-
-        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
-
-        if (adapter != null) {
-            adapter.clear();
-        }
-
-        actorController.getActorsSortedByName()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(actorResultAction);
     }
 
     private Action1<LinkedHashMap<Integer, Actor>> actorResultAction = (Action1<LinkedHashMap<Integer, Actor>>) actors -> {
+
         ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
         if (getListAdapter() == null) {
             adapter = new ActorListAdapter(getActivity(), null);
@@ -153,22 +146,11 @@ public class ActorListFragment extends ListFragment {
         adapter.notifyDataSetChanged();
     };
 
-
-    public void loadActorsOrderedByPopularity() {
-
-        ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
-
-        if (adapter != null) {
-            adapter.clear();
-        }
-
-        actorController.getActorsSortedByPopularity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(actorResultAction);
-    }
-
     public void loadActorsByFilter() {
+        //Disable endless scroll
+        endlessScroll = false;
+        getListView().removeFooterView(footerView);
+
         ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
         if (adapter != null) {
             adapter.clear();
@@ -181,6 +163,12 @@ public class ActorListFragment extends ListFragment {
     }
 
     private void loadActors(int pageNumber) {
+
+        //enable endless scroll
+        if (!endlessScroll) {
+            getListView().addFooterView(footerView);
+        }
+        endlessScroll = true;
 
         actorController.getActors(pageNumber)
                 .subscribeOn(Schedulers.io())
@@ -312,7 +300,7 @@ public class ActorListFragment extends ListFragment {
 
     public class EndlessScrollListener implements AbsListView.OnScrollListener {
 
-        private int visibleThreshold = 5;
+        private int visibleThreshold = 1;
         private int currentPage = 1;
         private int previousTotal = 0;
         private boolean loading = true;
@@ -336,6 +324,7 @@ public class ActorListFragment extends ListFragment {
             if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                 // I load the next page of gigs using a background task,
                 // but you can call any function here.
+                if (!endlessScroll) return;
                 Timber.d("Loading next page");
                 loadActors(currentPage);
                 loading = true;
