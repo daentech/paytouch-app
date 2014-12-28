@@ -71,18 +71,11 @@
             android:textSize="18sp"
             android:layout_marginTop="10dp"
             android:textStyle="bold"/>
-        <EditText
-            android:id="@+id/location_search"
+        <Spinner
+            android:id="@+id/location_search_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:lines="1"
-            android:maxLines="1"
-            android:background="@drawable/dark_rounded_background"
-            android:padding="10dp"
-            android:textColorHint="@color/white"
-            android:textColor="@color/white"
-            android:hint="@string/enter_location"/>
+            android:background="@drawable/dark_rounded_background"/>
 
         <TextView
             android:id="@+id/is_top_title"
@@ -172,8 +165,21 @@
         android:textSize="24sp"
         android:gravity="center"
         android:textAllCaps="false"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:background="@drawable/search_button_green_rounded"/>
+
+    <Button
+        android:id="@+id/reset_button"
+        android:layout_below="@+id/search_button"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="@string/reset"
+        android:textColor="@color/blue_bar_color"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:background="@null"/>
 </RelativeLayout>
 </ScrollView>

@@ -8,11 +8,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.edmodo.rangebar.RangeBar;
@@ -69,7 +71,7 @@ public class ActorListActivity extends ActionBarActivity
     @InjectView(R.id.rangeBarHigh) TextView rangeBarHigh;
 
     @InjectView(R.id.name_search) EditText nameSearch;
-    @InjectView(R.id.location_search) EditText locationSearch;
+    @InjectView(R.id.location_search_spinner) Spinner locationSearchSpinner;
     @InjectView(R.id.radiogroup_is_top) RadioGroup radioGroup;
 
     @InjectView(R.id.search_title) TextView searchTitle;
@@ -80,7 +82,6 @@ public class ActorListActivity extends ActionBarActivity
             R.id.search_title,
             R.id.search_button,
             R.id.name_search,
-            R.id.location_search,
             R.id.name_title,
             R.id.location_title,
             R.id.is_top_title,
@@ -123,6 +124,9 @@ public class ActorListActivity extends ActionBarActivity
 
         searchTitle.requestFocus();
 
+        setupLocationSearchSpinner();
+
+
         if (findViewById(R.id.actor_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
@@ -136,8 +140,15 @@ public class ActorListActivity extends ActionBarActivity
                     .findFragmentById(R.id.actor_list))
                     .setActivateOnItemClick(true);
         }
+    }
 
-        // TODO: If exposing deep links into your app, handle intents here.
+    private void setupLocationSearchSpinner() {
+        String[] spinnerArray = new String[] {
+                "select location", "Barcelona", "London", "Paris", "New York", "Dallas", "Dublin", "Helsinki", "Berlin", "San Francisco", "Sydney", "Vancouver", "Rome", "Chicago", "Boston", "Los Angeles"
+        };
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.location_spinner_item, android.R.id.text1, spinnerArray);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationSearchSpinner.setAdapter(spinnerArrayAdapter);
     }
 
     /**
@@ -210,10 +221,20 @@ public class ActorListActivity extends ActionBarActivity
         toggleFilterDrawer();
     }
 
-    // TODO location
     private void setFilterDetails() {
         nameSearch.setText(filter.name);
-        locationSearch.setText(filter.location);
+
+        if (filter.location == "") {
+            locationSearchSpinner.setSelection(0);
+        } else {
+            for (int i = 1; i < locationSearchSpinner.getAdapter().getCount(); i++) {
+                if (filter.location.equals(locationSearchSpinner.getItemAtPosition(i))) {
+                    locationSearchSpinner.setSelection(i);
+                    return;
+                }
+            }
+        }
+
         int radioId = R.id.radio_no_button;
         switch (filter.isTop) {
             case NO:
@@ -230,11 +251,10 @@ public class ActorListActivity extends ActionBarActivity
         rangeBar.setThumbIndices(filter.ratingLow, filter.ratingHigh);
     }
 
-    // TODO location
     @OnClick(R.id.search_button)
     public void searchButtonPressed() {
         filter.name = nameSearch.getText().toString();
-        filter.location = locationSearch.getText().toString();
+        filter.location = locationSearchSpinner.getSelectedItemPosition() == 0 ? "" : (String) locationSearchSpinner.getSelectedItem();
 
         switch (radioGroup.getCheckedRadioButtonId()) {
             case R.id.radio_no_button:
@@ -256,6 +276,17 @@ public class ActorListActivity extends ActionBarActivity
         ActorListFragment fragment = (ActorListFragment) getSupportFragmentManager().findFragmentById(R.id.actor_list);
 
         fragment.loadActorsByFilter();
+    }
+
+    @OnClick(R.id.reset_button)
+    public void resetButtonPressed() {
+        filter.clearFilter();
+        setFilterDetails();
+        toggleFilterDrawer();
+
+        ActorListFragment fragment = (ActorListFragment) getSupportFragmentManager().findFragmentById(R.id.actor_list);
+
+        fragment.loadActors(1);
     }
 
     @OnClick(R.id.close_button)

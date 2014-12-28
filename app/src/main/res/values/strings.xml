@@ -22,5 +22,6 @@
     <string name="no_actors_found">No actors found matching that criteria</string>
     <string name="enter_location">write location</string>
     <string name="all">all</string>
+    <string name="reset">reset</string>
 
 </resources>

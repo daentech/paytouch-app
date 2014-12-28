@@ -162,11 +162,15 @@ public class ActorListFragment extends ListFragment {
                 .subscribe(actorResultAction);
     }
 
-    private void loadActors(int pageNumber) {
+    public void loadActors(int pageNumber) {
 
         //enable endless scroll
         if (!endlessScroll) {
             getListView().addFooterView(footerView);
+            ActorListAdapter adapter = (ActorListAdapter) getListAdapter();
+            if (adapter != null) {
+                adapter.clear();
+            }
         }
         endlessScroll = true;
 
