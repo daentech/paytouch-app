@@ -28,7 +28,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "ENDPOINT", "\"http://testandroid.pay-touch.com:8080/android-test\""
+        buildConfigField "String", "ENDPOINT", "\"http://dan-gilbert.uk\""
     }
     buildTypes {
         release {

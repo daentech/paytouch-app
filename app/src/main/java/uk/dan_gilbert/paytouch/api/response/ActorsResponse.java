@@ -11,7 +11,7 @@ import uk.dan_gilbert.paytouch.data.model.Actor;
  */
 public class ActorsResponse {
 
-    @SerializedName("data")
+    @SerializedName("actors")
     public List<Actor> actors;
 
 }

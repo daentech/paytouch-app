@@ -26,6 +26,7 @@ public class APIModule {
                 .setEndpoint(BuildConfig.ENDPOINT)
                 .setConverter(new GsonConverter(new GsonBuilder()
                         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .setDateFormat("yyyy-MM-dd")
                         .create()))
                 .build();
     }

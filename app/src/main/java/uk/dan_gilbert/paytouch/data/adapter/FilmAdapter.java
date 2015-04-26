@@ -105,5 +105,14 @@ public class FilmAdapter extends BaseAdapter {
             return sdf.format(new Date(dateMillis));
         }
 
+        private String convertDate(Date date) {
+
+            if (sdf == null) {
+                sdf = new SimpleDateFormat("dd/MM/yyyy");
+            }
+
+            return sdf.format(date);
+        }
+
     }
 }

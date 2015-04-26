@@ -9,7 +9,7 @@ import uk.dan_gilbert.paytouch.api.response.ActorsResponse;
  */
 public interface ActorService {
 
-    @GET("/rest/actors")
+    @GET("/actors.json")
     public ActorsResponse getActors(@Query("page") int page);
 
 }
